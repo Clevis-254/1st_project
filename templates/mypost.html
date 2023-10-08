@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{url_for('static',filename='css/output.css')}}" rel="stylesheet">
+    <title>Complaint Details</title>
+</head>
+
+<body>
+    <main class="min-h-screen flex flex-col flex-wrap items-center justify-between">
+        <div class="p-20 shadow-md border justify-between flex-col flex flex-wrap min-h-screen w-2/3">
+            <div class="flex flex-wrap">
+                <span class="text-base font-serif font-semibold">Complaint ID: {{ complain.id }}</span>
+            </div>
+            <div class="mt-4">
+                <span class="text-base font-serif font-semibold">Complaint Title: {{ complain.title }}</span>
+            </div>
+            <div class="mt-8">
+                <span class="text-base font-serif font-semibold">Complaint:</span>
+                <div class="text-base text-gray-800 whitespace-pre-line mt-2">{{ complain.complain }}</div>
+            </div>
+            <div class="flex-row flex flex-wrap justify-between items-center">
+                <a href="{{ url_for('hello') }}"><button class="bg-blue-600  text-white font-bold py-2 px-4 rounded">Back</button>
+                </a>
+                <form action="{{ url_for('fullpost', id=complain.id) }}" method="post">
+                    <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+                        Delete
+                    </button>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

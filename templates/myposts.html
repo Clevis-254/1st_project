@@ -1,0 +1,26 @@
+{% extends 'index.html' %} 
+{% block content %}
+<div class="flex flex-wrap gap-4">
+    <div class="flex flex-wrap  gap-4 lg:flex-row"> <!-- Center the content in a column on large screens -->
+    {% for complaint in complaints %}
+    <a href="{{ url_for('fullpost', id=complaint.id) }}">
+        <div class="flex flex-col p-8 shadow-md hover:shadow-slate-300 border max-w-sm hover:border-gray-300 rounded mb-4">
+            <div class="mb-6">
+                <label for="complain_id" class="text-sm font-sans font-semibold">Complain_ID: </label>
+                <span class="text-gray-800 text-sm font-bold">{{ complaint.id }}</span>
+            </div>
+            <div class="w-full">
+                <label for="complaint" class="text-sm font-sans font-semibold">Complaint: </label>
+                <div class="text-gray-800 text-sm whitespace-normal break-words overflow-y-auto h-24">
+                    {{ complaint.complain }}
+                </div>
+            </div>
+        `</div>
+    </a>
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+
+<script></script>

@@ -1,0 +1,36 @@
+{% extends 'index.html' %} {% block content %}
+<div class="min-h-screen min-w-full flex flex-col p-12 shadow-md">
+    <div class="justify-between">
+        <span class="text-3xl font-sans font-bold ">WRITE A COMPLAINT</span>
+        <form method="POST">
+            <label for="title" class="block text-lg font-semibold mt-4">complaint Title</label>
+            <input  type="text" id="title" name="title" placeholder="Title" class="p-4 border border-gray-300 rounded shadow-slate-300 shadow-md" required class="p-5 rounded outline-none border-2">
+            <label for="complaint" class="block text-lg font-semibold mt-4">Your Complaint:</label>
+            <textarea id="complaint" name="complaint" rows="10" class="w-full p-4 border border-gray-300 rounded shadow-slate-300 shadow-md"></textarea>
+            <button type="submit" class="mt-4 bg-blue-500 text-white font-semibold py-2 px-4 rounded hover:bg-blue-700">Submit</button>
+        </form>
+    </div>
+</div>
+
+{% endblock %}
+
+<script>
+    function myFunction() {
+        var complaint = document.getElementById("complaint");
+        var title = document.getElementById("title");
+        params = 'complaint='+complaint+'title'+title;
+        var xhttp = new XMLHttpRequest();
+xhttp.open("POST", '/write', true); // true is asynchronous
+xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+xhttp.onload = function() {
+  if (xhttp.readyState === 4 && xhttp.status === 200) {
+    console.log(xhttp.responseText);
+    document.getElementById("txt").innerHTML = xhttp.responseText;
+  } else {
+    console.error(xhttp.statusText);
+  }
+};
+xhttp.send(params);
+return false;
+    }
+</script>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <!-- Include Tailwind CSS from CDN -->
+    <link href="{{url_for('static',filename='css/output.css')}}" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center ">
+    <div class="bg-white flex flex-col justify-between p-8 rounded-lg shadow-md w-96">
+        <h1 class="text-xl font-semibold font-sans items-center mb-4">User Profile</h1>
+        <div class="flex-row  flex justify-between min-w-max">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-600">User_ID:</label>
+                <span class="text-gray-800 text-sm font-bold">{{ current_user.id }}</span>
+            </div>
+        </div>
+        <div class="flex-row flex justify-between min-w-full">
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-600">First Name:</label>
+                <span class="text-gray-800 text-lg font-semibold">{{ current_user.firstName }}</span>
+            </div>
+            <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-600">Last Name:</label>
+                <span class="text-gray-800 text-lg font-semibold">{{ current_user.lastName }}</span>
+            </div>
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-600">Email:</label>
+            <span class="text-gray-800 text-lg font-semibold">{{ current_user.email }}</span>
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-600">Preferred Name:</label>
+            <span class="text-gray-800 text-lg font-semibold">{{ current_user.preferredName }}</span>
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-600">Phone Number:</label>
+                <span class="text-gray-800 text-lg font-semibold">{{ current_user.phonenumber }}</span>
+        </div>
+        <div class="flex flex-row justify-between">
+            <div class="mt-6">
+                <a href="{{ url_for('update') }}" class="bg-blue-200 text-white px-2  py-1 rounded hover:bg-gray-300 transition duration-300">Update profile</a>
+            </div>
+            <div class="mt-6">
+                <!-- Add a form to handle account deletion -->
+                <form action="{{ url_for('myaccount') }}" method="post">
+                    <input type="hidden" name="_method" value="DELETE">
+                    <button type="submit" class="bg-red-400 hover:bg-red-400 py-1 rounded">Delete Account</button>
+                </form>
+                
+            </div>
+            <div class="mt-6">
+                <a href="{{ url_for('hello') }}" class="bg-blue-200 text-white px-2  py-1 rounded hover:bg-gray-300 transition duration-300">Back</a>
+            </div>
+        </div>
+    
+    </div>
+</body>
+
+</html>

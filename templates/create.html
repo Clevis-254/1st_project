@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="{{url_for('static',filename='css/output.css')}}" rel="stylesheet">
+        <title>complains</title>
+    </head>
+    <body class="flex flex-col min-h-screen">
+        <div class="min-h-screen flex items-center justify-center p-16 bg-white shadow-md shadow-slate-400">
+            <div class="max-w-lg w-full p-8 bg-white shadow-lg rounded-lg">
+                <h2 class="text-2xl font-semibold mb-6 text-center">Create an Account</h2>
+                <form onsubmit="return validateForm" method="POST">
+                    <div class="flex-row flex justify-between">
+                        <div class="mb-4">
+                            <label for="firstName" class="block text-sm font-medium text-gray-600">First Name</label>
+                            <input type="text" id="firstName" name="firstName" class="mt-1 p-2 w-full border rounded-md" placeholder="John" required>
+                        </div>
+                        <div class="mb-4">
+                            <label for="lastName" class="block text-sm font-medium text-gray-600">Last Name</label>
+                            <input type="text" id="lastName" name="lastName" class="mt-1 p-2 w-full border rounded-md" placeholder="Doe" required>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-600">Email Address</label>
+                        <input type="email" id="email" name="email" class="mt-1 p-2 w-full border rounded-md" placeholder="johndoe@example.com" required>
+                        {% if show_email_exist %}
+                        <span class="font-light font-sans text-red-500">email Already exists </span>
+                        {% endif %}
+                        <span id="emailError" class="text-sm text-red-500 hidden">Invalid email address</span>
+                    </div>
+                    <div class="mb-4">
+                        <label for="phoneNumber" class="block text-sm font-medium text-gray-600">Phone Number</label>
+                        <input type="tel" id="phoneNumber" name="phoneNumber" class="mt-1 p-2 w-full border rounded-md" placeholder="123-456-7890" required>
+                    </div>
+                    <div class="mb-6">
+                        <label for="preferredName" class="block text-sm font-medium text-gray-600">Preferred Name</label>
+                        <input type="text" id="preferredName" name="preferredName" class="mt-1 p-2 w-full border rounded-md" placeholder="Preferred Name" required>
+                        {% if show_name_exist %}
+                        <span class="font-light font-sans text-red-500">Name Already exists </span>
+                        {% endif %}
+                    </div>
+                    <div class="mb-4 relative">
+                        <label for="password" class="block text-sm font-medium text-gray-600">Password</label>
+                        <input type="password" id="password" name="password" class="mt-1 p-2 pr-10 w-full border rounded-md" placeholder="********" required>
+                        <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center focus:outline-none" id="togglePassword">
+                            <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M1 10c0-3.18 2.74-5.88 6.5-6.74V2.5a1.5 1.5 0 113 0v.76C16.26 4.12 19 6.82 19 10c0 3.18-2.74 5.88-6.5 6.74v.76a1.5 1.5 0 11-3 0v-.76C3.74 15.88 1 13.18 1 10zM2.5 10c0 2.9 2.1 5.3 4.87 5.88l-1.03-1.72C6.15 13.83 6 12.95 6 12c0-1.68.9-3.14 2.24-3.94l-1.03-1.72C4.58 7.7 4.5 8.83 4.5 10zm5.5-1a1 1 0 011-1 1 1 0 110 2 1 1 0 01-1-1z"></path>
+                            </svg>
+                        </button>
+                        {% if show_short_password %}
+                        <span class="font-light font-sans text-red-500">password Too short </span>
+                        {% endif%}
+                        {% if show_weak_password %}
+                        <span class="font-light font-sans text-red-500">Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character.</span>
+                        {% endif %}
+                    </div>
+                    <div class="mb-4 relative">
+                        <label for="confirm_password" class="block text-sm font-medium text-gray-600">Confirm_Password</label>
+                        <input type="confirm_password" id="confirm_password" name="confirm_password" class="mt-1 p-2 pr-10 w-full border rounded-md" placeholder="********" required>
+                        <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center focus:outline-none" id="togglePassword">
+                            <svg class="h-5 w-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd" d="M1 10c0-3.18 2.74-5.88 6.5-6.74V2.5a1.5 1.5 0 113 0v.76C16.26 4.12 19 6.82 19 10c0 3.18-2.74 5.88-6.5 6.74v.76a1.5 1.5 0 11-3 0v-.76C3.74 15.88 1 13.18 1 10zM2.5 10c0 2.9 2.1 5.3 4.87 5.88l-1.03-1.72C6.15 13.83 6 12.95 6 12c0-1.68.9-3.14 2.24-3.94l-1.03-1.72C4.58 7.7 4.5 8.83 4.5 10zm5.5-1a1 1 0 011-1 1 1 0 110 2 1 1 0 01-1-1z"></path>
+                            </svg>
+                        </button>
+                        {% if show_different_password%}
+                        <span class="font-light font-sans text-red-500">passwords do not match </span>
+                        {%endif%}
+                    </div>
+                    <div class="flex justify-center">
+                        <button type="submit" class="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue">Create Account</button>
+                    </div>
+                </form>
+                <div class="border-top pt-3">
+                    <p class="">Already have account? <a href="/login" class="font-medium text-blue-500 underline hover:no-underline">Login here
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
+
+<script>
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
+    const email = document.getElementById('email');
+    const emailError = document.getElementById('emailError');
+
+    togglePassword.addEventListener('click', () => {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+    });
+
+    function validateForm() {
+
+        emailError.classList.add('hidden');
+
+        // Validate email
+        const emailValue = email.value;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!emailRegex.test(emailValue)) {
+            emailError.classList.remove('hidden');
+            return false;
+        }
+
+            const passwordValue = password.value;
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/;
+            
+            if (!passwordRegex.test(passwordValue)) {
+                alert('Password must have at least one special character, one uppercase letter, one lowercase letter, one number, and be at least 5 characters long.');
+                return false;
+            }
+
+            const confirm_passwordValue = document.getElementById('confirm_password').value;
+            
+            if (passwordValue !== confirm_passwordValue) {
+            alert('Password and Confirm Password do not match.');
+            return false;
+        }
+
+            // Continue form submission if password is valid
+            return true;
+
+        var firstName = document.forms["form"]["firstname"].value;
+        var lastName = document.forms["form"]["lastname"].value;
+        var email = document.forms["form"]["email"].value;
+        var phoneNumber = document.forms["form"]["phonenumber"].value;
+        var preferredName = document.forms["form"]["preferredName"].value;
+        var password = document.forms["form"]["password"].value
+        var confirm_password = document.forms["form"]["confirm_password"].value
+        params = 'firstName='+firstName+'lastName='+lastName+'email='+email+'phonenumber='+phoneNumber+'preferredname'+preferredName+'password'+password+'confirm_password'+confirm_password;
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", '/createaccount', true); // true is asynchronous
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.onload = function() {
+          if (xhttp.readyState === 4 && xhttp.status === 200) {
+            console.log(xhttp.responseText);
+            document.getElementById("txt").innerHTML = xhttp.responseText;
+          } else {
+            console.error(xhttp.statusText);
+          }
+        };
+        xhttp.send(params);
+        return false;
+        }
+</script>
+

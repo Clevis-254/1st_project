@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+    <body>
+        <head>
+            <meta charset=""UTF-8>
+            <meta name="viewport"content="width=device-width, initial-scale=1.0">
+            <link href="{{url_for('static',filename='css/output.css')}}" rel="stylesheet">
+            <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon"> 
+            <title>complains</title>
+        </head>
+        <main class="flex flex-wrap w-screen flex-col min-h-screen">
+            <nav class="bg-white p-8 shadow-lg shadow-slate-200">
+                <div class="container mx-auto flex flex-wrap justify-between items-center">
+                    <div class="text-black text-3xl font-semibold hover:text-slate-400 font-sans">
+                        <a href="/">Home</a>
+                    </div>
+                    <div class="space-x-4">
+                        {% if current_user.is_authenticated %}
+                        <a href="/myaccount" class="text-black text-xl font-sans font-bold hover:text-gray-300">myAccount</a>
+                        {% if request.path != '/write' %}
+                        <a href="/write" class="text-black text-xl font-sans font-bold hover:text-gray-300">write</a>
+                        {% endif %}
+                        {% if request.path != '/communities' %}
+                        <a href="/communities" class="text-black text-xl font-sans font-bold hover:text-gray-300">communities</a>
+                        {% endif %}
+                        {% if request.path != '/myposts' %}
+                        <a href="/myposts" class="text-black text-xl font-sans font-bold hover:text-gray-300">my complaints</a>
+                        {% endif %}
+                        <a href="/logout" class="text-black text-xl font-sans font-bold hover:text-gray-300">logout</a>
+                        {% else %}
+                        <a href="/login" class="text-black text-xl font-sans font-bold hover:text-gray-300">login</a>
+                        <a href="/createaccount" class="text-black text-xl font-sans font-bold hover:text-gray-300">create</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </nav>
+            {% block content %} {% endblock %}
+        </main>
+        <footer class="flex  flex-wrap flex-row justify-between mt-auto p-12 shadow-lg shadow-slate-100 items-center bg-gray-200 text-black w-full">
+            <div class="container mx-auto flex flex-wrap justify-between w-full">
+                <div class="flex  flex-wrap">
+                    <a href="/home" class="hover:text-gray-300 text-sm font-bold font-sans">Home</a>
+                </div>
+                <div class="flex items-center justify-between flex-wrap space-x-4 ml-auto">
+                        <div class="flex flex-wrap flex-col items-center">
+                            <span class="font-sans text-sm text-black font-bold">legal</span>
+                            <a href="/" class="hover:text-gray-300 text-sm">Terms and Conditions</a>
+                        </div>
+                        <div class="flex flex-wrap flex-col items-center">
+                            <span class="font-sans text-sm text-black font-bold">About</span>
+                            <a href="/" class="hover:text-gray-300 text-sm">About</a>
+                        </div>
+                    <div class="flex flex-wrap flex-col justify-between items-center">
+                        <span class="font-sans text-sm text-black font-bold">account</span>
+                        {% if current_user.is_authenticated %}
+                        <a href="/logout" class="hover:text-gray-300 text-sm">Logout</a>
+                        {% else %}
+                        <a href="/createaccount" class="hover:text-gray-300 text-sm">create account</a>
+                        <a href="/login" class="hover:text-gray-300 text-sm">Login</a>
+                        {% endif %}
+                    </div>
+                    {% if current_user.is_authenticated %}
+                    <div class="flex flex-wrap flex-col justify-between items-center">
+                        <span class="font-sans text-sm text-black font-bold">Activities</span>
+                        <a href="/write" class=" text-sm font-sans  hover:text-gray-300">write</a>
+                        <a href="/communities" class=" text-sm font-sans  hover:text-gray-300">communities</a>
+                        <a href="/myposts" class=" text-sm font-sans  hover:text-gray-300">my blogs</a>
+                    </div>
+                    {% endif %}
+                </div>
+                <div class="text-center w-full">
+                    <p>&copy; 2023 Complains. All rights reserved.</p>
+                </div>
+            </div>
+        </footer>    
+    </body>
+</html>

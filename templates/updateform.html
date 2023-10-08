@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link href="{{url_for('static',filename='css/output.css')}}" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100 min-h-screen flex items-center justify-center ">
+    <div class="bg-white flex flex-col justify-between p-8 rounded-lg shadow-md w-96">
+        <h1 class="text-xl font-semibold font-sans items-center mb-4">User Profile</h1>
+
+        <form action="{{ url_for('save') }}" method="post">
+            <div class="mb-4">
+                <label for="user_id" class="block text-sm font-medium text-gray-600">User_ID:</label>
+                <input type="text" id="user_id" name="user_id" value="{{ current_user.id }}" class="text-gray-800 text-lg font-semibold" readonly>
+            </div>
+
+            <div class="mb-4">
+                <label for="firstName" class="block text-sm font-medium text-gray-600">First Name:</label>
+                <input type="text" id="firstName" name="firstName" value="{{ current_user.firstName }}" class="text-gray-800 text-lg font-semibold">
+            </div>
+
+            <div class="mb-4">
+                <label for="lastName" class="block text-sm font-medium text-gray-600">Last Name:</label>
+                <input type="text" id="lastName" name="lastName" value="{{ current_user.lastName }}" class="text-gray-800 text-lg font-semibold">
+            </div>
+            <div class="mb-4">
+                <label for="preferredName" class="block text-sm font-medium text-gray-600">Preferred Name:</label>
+                <input type="text" id="preferredName" name="preferredName" value="{{ current_user.preferredName }}" class="text-gray-800 text-lg font-semibold">
+            </div>
+            <div class="mb-4">
+                <label for="phoneNumber" class="block text-sm font-medium text-gray-600">phone Number:</label>
+                <input type="text" id="phoneNumber" name="phoneNumber" value="{{ current_user.phonenumber }}" class="text-gray-800 text-lg font-semibold">
+            </div>
+            <div class="mb-4">
+                <label for="email" class="block text-sm font-medium text-gray-600">Email:</label>
+                <input type="text" id="email" name="email" value="{{ current_user.email }}" class="text-gray-800 text-lg font-semibold">
+            </div>
+            <div class="flex flex-row justify-between">
+                <div class="mt-6">
+                    <button type="submit" class="bg-blue-200 text-white px-2  py-1 rounded hover:bg-gray-300 transition duration-300">Save Changes</button>
+                </div>
+                <div class="mt-6">
+                    <a href="{{ url_for('myaccount') }}" class="bg-blue-200 text-white px-2  py-1 rounded hover:bg-gray-300 transition duration-300">Back</a>
+                </div>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
+
+<script>
+    function validateForm() {
+
+emailError.classList.add('hidden');
+
+// Validate email
+const emailValue = email.value;
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+if (!emailRegex.test(emailValue)) {
+    emailError.classList.remove('hidden');
+    return false;
+}
+    // Continue form submission if password is valid
+    return true;
+
+var user_id = document.forms["form"]["user_id"].value;
+var firstName = document.forms["form"]["firstname"].value;
+var lastName = document.forms["form"]["lastname"].value;
+var email = document.forms["form"]["email"].value;
+var phoneNumber = document.forms["form"]["phoneNumber"].value;
+var preferredName = document.forms["form"]["preferredName"].value;
+params = 'user_id='+user_id+'firstname='+firstname+'lastName='+lastName+'email='+email+'phoneNumber='+phoneNumber+'preferredname'+preferredName+'password'+password;
+var xhttp = new XMLHttpRequest();
+xhttp.open("POST", '/save', true); // true is asynchronous
+xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+xhttp.onload = function() {
+  if (xhttp.readyState === 4 && xhttp.status === 200) {
+    console.log(xhttp.responseText);
+    document.getElementById("txt").innerHTML = xhttp.responseText;
+  } else {
+    console.error(xhttp.statusText);
+  }
+};
+xhttp.send(params);
+return false;
+}
+</script>

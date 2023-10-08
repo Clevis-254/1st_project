@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="{{url_for('static',filename='css/output.css')}}" rel="stylesheet">
+        <title>complains</title>
+    </head>
+    <body class="min-h-screen min-w-full flex items-center justify-center bg-gray-100">
+        <div class="bg-white p-10 rounded shadow-md max-w-md w-full">
+            <div class="bg-white p-8 rounded shadow-md">
+                <h2 class="text-2xl font-semibold mb-6 text-center">Login</h2>
+                <form onsubmit="return validateForm()" method="POST">
+                    <div class="mb-4">
+                        <label for="email" class="block text-sm font-medium text-gray-600">Email Address</label>
+                        <input type="email" id="email" name="email" class="mt-1 p-2 w-full border rounded-md" placeholder="johndoe@example.com" required>
+                    </div>
+                    <div class="mb-4 relative">
+                        <label for="password" class="block text-sm font-medium text-gray-600">Password</label>
+                        <input type="password" id="password" name="password" class="mt-1 p-2 pr-10 w-full border rounded-md"
+                            placeholder="********" required>
+                        <button type="button" class="absolute inset-y-0 right-0 pr-3 flex items-center focus:outline-none"
+                            id="togglePassword">
+                            <svg class="h-5 w-5 text-gray-400 cursor-pointer" fill="currentColor" viewBox="0 0 20 20"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path fill-rule="evenodd" clip-rule="evenodd"
+                                    d="M1 10c0-3.18 2.74-5.88 6.5-6.74V2.5a1.5 1.5 0 113 0v.76C16.26 4.12 19 6.82 19 10c0 3.18-2.74 5.88-6.5 6.74v.76a1.5 1.5 0 11-3 0v-.76C3.74 15.88 1 13.18 1 10zM2.5 10c0 2.9 2.1 5.3 4.87 5.88l-1.03-1.72C6.15 13.83 6 12.95 6 12c0-1.68.9-3.14 2.24-3.94l-1.03-1.72C4.58 7.7 4.5 8.83 4.5 10zm5.5-1a1 1 0 011-1 1 1 0 110 2 1 1 0 01-1-1z"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div class="flex justify-center">
+                        <button type="submit"
+                            class="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 focus:outline-none focus:shadow-outline-blue">Login</button>
+                    </div>
+                </form>
+                <div class="border-top pt-3 flex flex-col justify-between">
+                    {% if not show_forgot_password %}
+                     <p class="font-medium">Don't have an account?<a href="/createaccount" class="font-medium text-blue-500 underline hover:no-underline">sign up</a></p>
+                     {% endif %}
+                     {% if show_forgot_password %}
+                     <span class="font-light font-sans text-red-500">WRONG PASSWORD </span>
+                    <p class="font-medium">forgot<a href="/forgot" class="font-medium text-blue-500 underline hover:no-underline">password??</a></p>
+                    {% endif %}
+                </div>
+            </div>
+            
+        </div>
+    </body>
+</html>
+
+<script>
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
+
+    togglePassword.addEventListener('click', () => {
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+    });
+
+    function validateForm() {
+        const passwordValue = password.value;
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{5,}$/;
+            
+            if (!passwordRegex.test(passwordValue)) {
+                alert('Password must have at least one special character, one uppercase letter, one lowercase letter, one number, and be at least 5 characters long.');
+                return false;
+            }
+        return true; 
+
+        var email = document.forms["forms"]['email'].value;
+        var password = document.forms["forms"]['password'].value
+        params ='email='+email+'password'+password;
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", '/login', true); // true is asynchronous
+        xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+        xhttp.onload = function() {
+          if (xhttp.readyState === 4 && xhttp.status === 200) {
+            console.log(xhttp.responseText);
+            document.getElementById("txt").innerHTML = xhttp.responseText;
+          } else {
+            console.error(xhttp.statusText);
+          }
+        };
+        xhttp.send(params);
+        return false;
+        }
+</script>
