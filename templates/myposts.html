@@ -3,7 +3,7 @@
 <div class="flex flex-wrap gap-4">
     <div class="flex flex-wrap  gap-4 lg:flex-row"> <!-- Center the content in a column on large screens -->
     {% for complaint in complaints %}
-    <a href="{{ url_for('fullpost', id=complaint.id) }}">
+    <a href="{{ url_for('my_fullpost', id=complaint.id) }}">
         <div class="flex flex-col p-8 shadow-md hover:shadow-slate-300 border max-w-sm hover:border-gray-300 rounded mb-4">
             <div class="mb-6">
                 <label for="complain_id" class="text-sm font-sans font-semibold">Complain_ID: </label>

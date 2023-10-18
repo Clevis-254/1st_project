@@ -1,20 +1,16 @@
 import os
 from flask_login import LoginManager
-from email.message import EmailMessage
 from flask_login import UserMixin
 from flask import Flask, render_template,request,redirect,url_for,jsonify,current_app,flash
-from flask_mail import Mail
-from flask_mail import Message
 from werkzeug.security import generate_password_hash , check_password_hash
 from flask_bcrypt import Bcrypt
 from flask_login import login_user, current_user, logout_user, login_required
-from data import user_data, complain_data,my_complain_data,complains
+from send_messages import send_email
+from data import user_data, complain_data,my_complain_data,complains ,add_user ,createBlog , updateInfo,get_username_by_email
 import nanoid
 import re
 import jwt
 from datetime import datetime, timedelta
-import ssl
-import smtplib
 import sqlite3
 
 DATABASE = 'complain.db'
@@ -39,27 +35,16 @@ def load_user(user_id):
 
 @app.route("/")
 def hello():
+    return render_template ('base.html')
+
+@app.route("/home")
+def home():
     data = complains()
     return render_template ('home.html' , all_complains = data)
 @app.route("/createaccount", methods=['GET', 'POST'])
 def createAccount():
-    def welcome_mail(email):
-        msg = EmailMessage()
-        msg['From'] = 'noreply@demo.com'
-        msg['To'] = [email]
-        body=f'''
-           Welcome to complaint. where you can write anything you want. We are exited to welcome 
-           you to our family. so whenever you feel like complaining just write whatever you want and 
-            we will help you to get your complaint'''
-        msg['Subject'] = 'WELCOME TO COMPLAINT'
-        msg.set_content(body)
-        # the code below is used to send an automatic email by the use of smtp
-        context = ssl.create_default_context()
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
-            smtp.login('noreplyokoa@gmail.com', 'gjli nggj rwzs menu')
-            smtp.sendmail('norepldemo@gmail.com', email, msg.as_string())
     if current_user.is_authenticated:
-        return redirect (url_for('hello'))
+        return redirect (url_for('home'))
     if request.method == 'GET':
         return render_template('create.html')
     if request.method == 'POST':
@@ -96,30 +81,16 @@ def createAccount():
         
         # Hash the password before storing it in the database
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
-            # Create a new User instance and insert into the database
-        conn = sqlite3.connect('complain.db')
-        cur = conn.cursor()
-        try:
-            cur.execute("INSERT INTO User ('id', 'firstName', 'lastName', 'email', 'phonenumber', 'preferredname', 'password')\
-                        VALUES (?, ?, ?, ?, ?, ?, ?)", (id, firstName, lastName, email, phone_number, preferred_name, hashed_password))
-            conn.commit()
-            msg = 'Account created successfully.'
-            welcome_mail(email)
-            return redirect (url_for('login'))  # Redirect to login page with success message
-
-        except Exception as e:
-            # Handle the specific exception (e.g., SQLite integrity error) here
-            msg = f"Error occurred: {e}"
+        status = add_user(id, firstName, lastName, email, phone_number, preferred_name, hashed_password)
+        if status :
+            return redirect (url_for('login'))
+        else:
             return redirect(url_for('createAccount'))
-
-        finally:
-            conn.close()
-            print(msg)
-
+        
 @app.route("/login", methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect (url_for('hello'))
+        return redirect (url_for('home'))
     if request.method == 'GET':
         return render_template('login.html')
     if request.method == 'POST':
@@ -131,7 +102,7 @@ def login():
             login_user(user)
             next_page = request.args.get('next') 
             # goes to the next page if exists after one logs in
-            return redirect (next_page) if next_page else redirect(url_for('hello'))
+            return redirect (next_page) if next_page else redirect(url_for('home'))
         else:
             return render_template('login.html', show_forgot_password=True)
 
@@ -156,13 +127,7 @@ def writepost():
         complaint = request.form.get('complaint')
         title = request.form.get('title')
         user_id = current_user.id
-
-        conn = sqlite3.connect('complain.db')
-        cur = conn.cursor()
-        cur.execute("INSERT INTO Complains (id, user_id, title ,complain) VALUES (?, ?, ?, ?)", (id, user_id,title,complaint))
-        conn.commit()
-        conn.close()
-
+        createBlog(id, user_id,title,complaint)
         return redirect(url_for('myposts'))
 @app.route("/myaccount",methods=['GET','POST'])
 @login_required
@@ -179,15 +144,8 @@ def myaccount():#
         conn.commit()
         conn.close()
         logout_user()  # Log out the user after account deletion
-        return redirect(url_for('hello'))
+        return redirect(url_for('home'))
         
-
-@app.route("/communities")
-@login_required
-def communities():
-    return render_template ("community.html")
-
-
 @app.route("/save", methods=['POST'])
 @login_required
 def save():
@@ -198,22 +156,8 @@ def save():
     phone_number = request.form.get('phoneNumber')
     preferred_name = request.form.get('preferredName')
 
-    conn = sqlite3.connect('complain.db')
-    cur = conn.cursor()
-
-    try:
-        cur.execute("UPDATE User SET firstName=?, lastName=?, email=?, phonenumber=?, preferredname=? WHERE id=?",
-                    (firstName, lastName, email, phone_number, preferred_name, user_id))
-        conn.commit()
-        msg = 'User information updated successfully.'
-        print (msg)
-    except sqlite3.Error as e:
-        conn.rollback()
-        msg = f'Error: {e}'
-        print (msg)
-    finally:
-        conn.close()
-        return redirect(url_for('myaccount'))
+    updateInfo(firstName, lastName, email, phone_number, preferred_name, user_id)
+    return redirect(url_for('myaccount'))
 
 @app.route("/update")
 @login_required
@@ -222,32 +166,6 @@ def update():
 
 @app.route("/forgot",methods=['GET','POST'])
 def forgotpassword():
-    # produces a reset token through its dangerous
-    def generate_token(user_id, username):
-        expiration_time = datetime.utcnow() + timedelta(minutes=30)
-        payload = {'user_id': user_id, 'username': username, 'exp': expiration_time}
-        token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
-        return token
-
-    # sends reset token
-    def send_email(user, email):
-        token_data = generate_token(user)
-        token = token_data
-        mail = EmailMessage()
-        mail['From'] = 'noreply@demo.com'
-        mail['To'] = [email]
-        body=f'''
-            Hello comrade ... to reset your password visit the following link
-            {url_for('reset_password', token=token, _external=True)}
-            If you did not make this request then simply ignore and delete it.'''
-        mail['Subject'] = 'Password Reset Request'
-        mail.set_content(body)
-        # the code below is used to send an automatic email by the use of smtp
-        context = ssl.create_default_context()
-        with smtplib.SMTP_SSL('smtp.gmail.com', 465, context=context) as smtp:
-            smtp.login('noreplyokoa@gmail.com', 'gjli nggj rwzs menu')
-            smtp.sendmail('norepldemo@gmail.com', email, mail.as_string())
-
     # TODO check if account exists
     if request.method == 'GET':
         return render_template('forgotpass.html')
@@ -260,7 +178,7 @@ def forgotpassword():
         conn.close()
 
         if user_id:
-            send_email(user_id[0], email)  # Pass the retrieved user_id and email to send_email function
+            send_email(email,app)  # Pass the retrieved user_id and email to send_email function
         # Add logic here to handle the case where the email doesn't exist in the database
         return redirect(url_for('forgotpassword'))
 
@@ -306,9 +224,13 @@ def reset_password(token):
             conn.close()
             return redirect(url_for('login'))
 
-@app.route("/fullpost/<id>", methods=['GET','POST'])
-@login_required
+@app.route("/fullpost/<id>")
 def fullpost(id):
+        complaint = my_complain_data(id)  # Assuming you have a function to fetch complaint data by ID
+        return render_template('post.html', complain=complaint)
+@app.route("/myfullpost/<id>", methods=['GET','POST'])
+@login_required
+def my_fullpost(id):
     if request.method == 'GET':
         complaint = my_complain_data(id)  # Assuming you have a function to fetch complaint data by ID
         return render_template('mypost.html', complain=complaint)
@@ -323,7 +245,7 @@ def fullpost(id):
         cur.execute("DELETE FROM Complains WHERE id=?", (post_id,))
         conn.commit()
         conn.close()
-        return redirect(url_for('hello'))
+        return redirect(url_for('home'))
 
 
 if __name__ == "__main__":
