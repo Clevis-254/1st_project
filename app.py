@@ -38,6 +38,7 @@ def hello():
     return render_template ('base.html')
 
 @app.route("/home")
+@login_required
 def home():
     data = complains()
     return render_template ('home.html' , all_complains = data)
@@ -83,7 +84,8 @@ def createAccount():
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         status = add_user(id, firstName, lastName, email, phone_number, preferred_name, hashed_password)
         if status :
-            return redirect (url_for('login'))
+            current_user.is_authenticated
+            return redirect (url_for('home'))
         else:
             return redirect(url_for('createAccount'))
         
@@ -144,7 +146,7 @@ def myaccount():#
         conn.commit()
         conn.close()
         logout_user()  # Log out the user after account deletion
-        return redirect(url_for('home'))
+        return redirect(url_for('hello'))
         
 @app.route("/save", methods=['POST'])
 @login_required

@@ -8,10 +8,9 @@
     <link href="{{url_for('static',filename='css/output.css')}}" rel="stylesheet">
 </head>
 
-<body class="bg-gray-100 min-h-screen flex items-center justify-center ">
-    <div class="bg-white flex flex-col justify-between p-8 rounded-lg shadow-md w-96">
-        <h1 class="text-xl font-semibold font-sans items-center mb-4">User Profile</h1>
-
+<body class=" flex min-h-screen">
+    <div class="bg-white flex flex-col justify-between w-full">
+        <span class="text-xl font-semibold font-sans items-center mb-4">User Profile</span>
         <form action="{{ url_for('save') }}" method="post">
             <div class="mb-4">
                 <label for="user_id" class="block text-sm font-medium text-gray-600">User_ID:</label>
