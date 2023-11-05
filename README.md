@@ -2,7 +2,8 @@
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-This is my first project using Flask web app and Tailwind CSS.
+This is my first project using Flaskwebapp and Tailwind CSS.
+The application uses SQLlite as its language
 
 ## Table of Contents
 
