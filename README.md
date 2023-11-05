@@ -14,16 +14,18 @@ This is my first project using flask web app and tailwind css.
 
 ## Installation
 
-Provide instructions on how to install your project, including any dependencies that need to be installed. You can use this section to explain how to set up the development environment as well.
-
+Fist you have to install the project from github using the code given below.
 ```bash
 $ git clone https://github.com/Clevis-254/1st_project.git
 $ cd 1st_project
+## Usage
 
-Installing dependencies in your package manager.
-The dependecies required are Tailwind css.
-To install it , one has to first install the node js module by
-```bash
-$ npm install
+Once you have installed the project and its dependencies, you can run the Flask web app and start using the application. Here are the steps to run the project:
+
+1. Run the Flask application:
+
+   ```bash
+   $ python app.py
+
 
 
