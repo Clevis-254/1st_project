@@ -11,7 +11,6 @@ The application uses SQLlite as its language
 - [Installing Packages](#packages)
 - [Usage](#usage)
 - [Contributing](#contributing)
-- [License](#license)
 - [Contact](#contact)
 
 ## Installation
@@ -38,4 +37,21 @@ $ npm run css
 ```
 which prompts the css to start running as required.
 You must then run the `app.py` which will make the server to start running and one can then be able to use the application.
+## Contributing
+If you wish to contribute to this project, follow these steps:
 
+Fork the repository on GitHub.
+Create a new branch with a descriptive name: 
+```bash
+$ git checkout -b feature/new-feature.
+```
+Make your changes and commit them: 
+```bash
+$ git commit -m 'Add new feature'.
+```
+Push your changes to the branch: 
+``bash
+git push origin feature/new-feature.
+```
+Open a pull request on the original repository.
+Please follow the coding standards, conventions, and guidelines specified in the project.
