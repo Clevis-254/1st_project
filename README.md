@@ -33,7 +33,7 @@ To run the project, one must first run tailwindcss which is used in the project
 This is done by running tailwind css
 On the terminal write:
 ```bash
-$ npm run tailwind
+$ npm run css
 ```
 which prompts the css to start running as required.
 You must then run the `app.py` which will make the server to start running and one can then be able to use the application.
