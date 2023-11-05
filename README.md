@@ -19,11 +19,11 @@ Provide instructions on how to install your project, including any dependencies 
 ```bash
 $ git clone https://github.com/Clevis-254/1st_project.git
 $ cd 1st_project
-# Additional installation steps, if any
-```bash
+
 Installing dependencies in your package manager.
 The dependecies required are Tailwind css.
 To install it , one has to first install the node js module by
+```bash
 $ npm install
 
 
