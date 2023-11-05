@@ -28,3 +28,14 @@ To install the flask package do the following:
 ```bash
 $ pip install flask.
 ```
+Tailwind css requires installation in itself in order to run the project
+
+ first we have to install node js. Integrate the node terminal by running the following command:
+ ```bash
+$ npm init -y.
+```
+Install tailwindcss by running npm i tailwind css on your commandline.
+```bash
+$ npm i tailwindcss
+```
+
