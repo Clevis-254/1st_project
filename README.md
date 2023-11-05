@@ -23,19 +23,18 @@ $ cd 1st_project
 $ npm install
 ```
 ## Packages
-The packages used are python flask and Tailwind css packages.
+The packages used are python flask and Tailwind css packages
 To install the flask package do the following:
 ```bash
 $ pip install flask.
 ```
-Tailwind css requires installation in itself in order to run the project
-
- first we have to install node js. Integrate the node terminal by running the following command:
- ```bash
-$ npm init -y.
-```
-Install tailwindcss by running npm i tailwind css on your commandline.
+## Usage
+To run the project, one must first run tailwindcss which is used in the project
+This is done by running tailwind css
+On the terminal write:
 ```bash
-$ npm i tailwindcss
+$ npm run tailwind
 ```
+which prompts the css to start running as required.
+You must then run the `app.py` which will make the server to start running and one can then be able to use the application.
 
