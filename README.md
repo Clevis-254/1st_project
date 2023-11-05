@@ -50,7 +50,7 @@ Make your changes and commit them:
 $ git commit -m 'Add new feature'.
 ```
 Push your changes to the branch: 
-``bash
+```bash
 git push origin feature/new-feature.
 ```
 Open a pull request on the original repository.
