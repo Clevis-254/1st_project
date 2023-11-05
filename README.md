@@ -2,7 +2,7 @@
 
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
-Description of your project goes here. Briefly explain what your project does, its main features, and its purpose.
+This is my first project using flask web app and tailwind css.
 
 ## Table of Contents
 
@@ -20,4 +20,10 @@ Provide instructions on how to install your project, including any dependencies 
 $ git clone https://github.com/Clevis-254/1st_project.git
 $ cd 1st_project
 # Additional installation steps, if any
+```bash
+Installing dependencies in your package manager.
+The dependecies required are Tailwind css.
+To install it , one has to first install the node js module by
+$ npm install
+
 
