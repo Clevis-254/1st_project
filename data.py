@@ -10,7 +10,7 @@ cur= conn.cursor()
 login_manager = LoginManager()
 
 class User(UserMixin):
-    def __init__(self, id, email, password, preferredName, firstName, lastName, phonenumber):
+    def __init__(self, id, email, password, preferredName, firstName, lastName, phonenumber,picture):
         self.id = id
         self.email = email
         self.password = password
@@ -18,6 +18,7 @@ class User(UserMixin):
         self.firstName = firstName
         self.lastName = lastName
         self.phonenumber = phonenumber
+        self.picture = picture if picture else 'user .png'
     
     
     
@@ -36,7 +37,8 @@ cur.execute("""CREATE TABLE IF NOT EXISTS 'User'(
     email TEXT NOT NULL UNIQUE,
     phonenumber INTEGER NOT NULL UNIQUE,
     preferredname TEXT NOT NULL UNIQUE,
-    password TEXT NOT NULL    
+    password TEXT NOT NULL,
+    picture TEXT             
 )""")
 
 cur.execute("""CREATE TABLE IF NOT EXISTS 'Complains'(
@@ -56,7 +58,7 @@ def user_data():
     conn.close()
 
     
-    user_objects = [User(user['id'], user['email'], user['password'] , user['preferredName'], user['firstName'], user['lastName'], user['phonenumber']) for user in users]
+    user_objects = [User(user['id'], user['email'], user['password'] , user['preferredName'], user['firstName'], user['lastName'], user['phonenumber'], user['picture'] ) for user in users]
     return user_objects
 
 def complain_data(user_id):
@@ -132,13 +134,13 @@ def createBlog(id, user_id,title,complaint):
     msg = "added successfully"
     return msg
 
-def updateInfo(firstName, lastName, email, phone_number, preferred_name, user_id):
+def updateInfo(firstName, lastName, email, phone_number, preferred_name, picture,user_id):
     conn = sqlite3.connect('complain.db')
     cur = conn.cursor()
 
     try:
-        cur.execute("UPDATE User SET firstName=?, lastName=?, email=?, phonenumber=?, preferredname=? WHERE id=?",
-                    (firstName, lastName, email, phone_number, preferred_name, user_id))
+        cur.execute("UPDATE User SET firstName=?, lastName=?, email=?, phonenumber=?, preferredname=?,picture=? WHERE id=?",
+                    (firstName, lastName, email, phone_number, preferred_name,picture,user_id))
         conn.commit()
         msg = 'User information updated successfully.'
         status = True
