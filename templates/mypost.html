@@ -22,7 +22,7 @@
                 <div class="text-base text-gray-800 whitespace-pre-line mt-2">{{ complain.complain }}</div>
             </div>
             <div class="flex-row flex flex-wrap justify-between items-center">
-                <a href="{{ url_for('hello') }}"><button class="bg-blue-600  text-white font-bold py-2 px-4 rounded">Back</button>
+                <a href="{{ url_for('home') }}"><button class="bg-blue-600  text-white font-bold py-2 px-4 rounded">Back</button>
                 </a>
                 <form action="{{ url_for('fullpost', id=complain.id) }}" method="post">
                     <button type="submit" class="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">

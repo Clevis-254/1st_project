@@ -1,3 +1,4 @@
+import secrets
 import os
 from flask_login import LoginManager
 from flask_login import UserMixin
@@ -41,7 +42,8 @@ def hello():
 @login_required
 def home():
     data = complains()
-    return render_template ('home.html' , all_complains = data)
+    image_file = url_for('static',filename='image/'+ current_user.picture)
+    return render_template ('home.html' , all_complains = data, picture=image_file)
 @app.route("/createaccount", methods=['GET', 'POST'])
 def createAccount():
     if current_user.is_authenticated:
@@ -118,12 +120,14 @@ def logout():
 def myposts():
     if request.method == 'GET':
         user_complaints = complain_data(current_user.id)
-        return render_template('myposts.html', complaints=user_complaints)
+        image_file = url_for('static',filename='image/'+ current_user.picture)
+        return render_template('myposts.html', complaints=user_complaints,picture=image_file)
 @app.route("/write",methods=['GET','POST'])
 @login_required
 def writepost():
     if request.method == 'GET':
-        return render_template('write.html')
+        image_file = url_for('static',filename='image/'+ current_user.picture)
+        return render_template('write.html',picture=image_file)
     if request.method == 'POST':
         id = nanoid.generate()
         complaint = request.form.get('complaint')
@@ -135,7 +139,8 @@ def writepost():
 @login_required
 def myaccount():#
     if request.method == 'GET':
-        return render_template("profile.html")
+        image_file = url_for('static',filename='image/'+ current_user.picture)
+        return render_template("profile.html",picture=image_file)
     if request.method == 'POST':
         user_id = current_user.id
 
@@ -151,15 +156,32 @@ def myaccount():#
 @app.route("/save", methods=['POST'])
 @login_required
 def save():
-    user_id = request.form.get('user_id')
+    user_id = current_user.id
     firstName = request.form.get('firstName')
     lastName = request.form.get('lastName')
     email = request.form.get('email')
     phone_number = request.form.get('phoneNumber')
     preferred_name = request.form.get('preferredName')
+    picture = request.files.get('picture')  # Use request.files to get the file object
 
-    updateInfo(firstName, lastName, email, phone_number, preferred_name, user_id)
-    return redirect(url_for('myaccount'))
+    # Check if a file is provided
+    if picture and picture.filename:
+        def save_picture(picture):
+            random_hex = secrets.token_hex(8)
+            f_name, f_ext = os.path.splitext(picture.filename)
+            picture_fn = random_hex + f_ext
+            picture_path = os.path.join(app.root_path, 'static/profile_pics', picture_fn)
+            picture.save(picture_path)
+            return picture_fn
+
+        picture_file = save_picture(picture)
+        print(firstName, lastName, email, phone_number, preferred_name,picture_file,user_id)
+        updateInfo(firstName, lastName, email, phone_number, preferred_name,picture_file,user_id)
+        return redirect(url_for('myaccount'))
+    else:
+        # Handle the case where no file is provided
+        flash('No file selected', 'warning')
+        return redirect(url_for('myaccount'))
 
 @app.route("/update")
 @login_required
